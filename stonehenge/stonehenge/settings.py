@@ -55,7 +55,9 @@ ROOT_URLCONF = 'stonehenge.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'stonehenge/templates'),
+        ],
         'APP_DIRS': False,
         'OPTIONS': {
             'context_processors': [
