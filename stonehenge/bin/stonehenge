@@ -16,3 +16,6 @@ def main():
     else:
         msg = "Incorrect parameter supplied: {0}".format(sys.argv[1])
         print_usage(msg=msg)
+
+if __name__ == "__main__":
+    main()
