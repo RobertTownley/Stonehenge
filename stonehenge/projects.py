@@ -26,15 +26,42 @@ class StonehengeProject(object):
         self.create_django_project()
 
     def create_local_database(self):
-        print("Building database")
-        db = self.config['DATABASE']
+        db = self.config['DATABASE']['local']
+
+        # Connect to PostgreSQL database
         connection = psycopg2.connect(
             user='postgres',
             dbname='postgres',
             host=db['HOST'],
+            password=db['POSTGRES_PASSWORD'],
         )
+        connection.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
         cursor = connection.cursor()
-        cursor.execute("CREATE DATABASE {0}".format(db['NAME']))
+
+        # Delete database if it currently exists
+        command = "SELECT datname from pg_database WHERE datname='{0}';".format(db['NAME'])
+        cursor.execute(command)
+        if cursor.fetchone():
+            cursor.execute("DROP DATABASE {0}".format(db['NAME']))
+
+        # Delete the user if they currently exist
+        command = "SELECT 1 FROM pg_roles WHERE rolname='{0}';".format(db['USER'])
+        cursor.execute(command)
+        if cursor.fetchone():
+            cursor.execute("DROP USER {0}".format(db['USER']))
+
+        # Create the database and user
+        cursor.execute("CREATE DATABASE {0};".format(db['NAME']))
+        cursor.execute("CREATE USER {0};".format(db['USER']))
+        cursor.execute("ALTER USER {0} WITH PASSWORD '{1}';".format(
+            db['USER'],
+            db['PASSWORD'],
+        ))
+        cursor.execute("GRANT ALL PRIVILEGES ON DATABASE {0} TO {1}".format(
+            db['NAME'],
+            db['USER'],
+        ))
+        print("--Database created".format(db['NAME']))
 
     def initialize_git_repository(self):
         print("Building Git Repo")

@@ -19,4 +19,16 @@ def validate_config(config_file_location):
     else:
         raise Exception("Config file not found at {0}".format(config_file_location))
 
+    # Validate general settings
+    required_fields = ['PROJECT_NAME']
+    for field in required_fields:
+        if not CONFIG[field]:
+            raise Exception("Required field {0} not specified".format(field))
+
+    # Validate local database
+    db = CONFIG['DATABASE']['local']
+    for key in db.keys():
+        if not db[key]:
+            raise Exception("Required database field {0} not specified".format(key))
+
     return CONFIG

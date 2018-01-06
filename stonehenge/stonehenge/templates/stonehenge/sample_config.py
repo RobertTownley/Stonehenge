@@ -14,11 +14,14 @@ PROJECT_NAME = "Stonehenge Example {0}".format(year)
 import random
 import string
 
-# General Details
-PROJECT_NAME = ''
+from django.utils.text import slugify
 
-# Version Control
+# REQUIRED SETTINGSs
+PROJECT_NAME = ''
 GITHUB_REPOSITORY = ''
+
+# Optional Settings
+PROJECT_SLUG = slugify(PROJECT_NAME.lower()).replace("-", "_")
 
 '''Database settings
 
@@ -36,16 +39,14 @@ DATABASE_PASSWORD = ''.join(
 
 DATABASE = {
     'local': {
-        'USER': '',
-        'NAME': '',
+        'USER': PROJECT_SLUG,
+        'NAME': PROJECT_SLUG + "db",
         'PASSWORD': DATABASE_PASSWORD,
         'HOST': 'localhost',
+        'POSTGRES_PASSWORD': 'postgrespassword',
     }
 }
 
-'''Features to be included in the new site
-
-'''
 FEATURES = [
     'public',  # Public homepage, taken from presto templates
     'user_model',  # Custom user model
