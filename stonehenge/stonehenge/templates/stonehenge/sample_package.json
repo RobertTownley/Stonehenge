@@ -1,0 +1,16 @@
+{
+  "name": "{{ PROJECT_SLUG }}",
+  "version": "{{ PROJECT_VERSION }}",
+  "description": "{{ PROJECT_DESCRIPTION }}",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },  
+  "repository": {
+      "type": "git",
+      "url": "{{ GITHUB_REPOSITORY }}"
+  },
+  "author": "{{ PROJECT_AUTHOR }}", 
+  "license": "{{ PROJECT_LICENSE }}"
+}
+

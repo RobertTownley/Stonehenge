@@ -1,6 +1,5 @@
 import django
 import os
-import subprocess
 
 from django.conf import settings
 from django.template.loader import get_template
@@ -34,12 +33,3 @@ def create_new_config_file():
     file_content = template.render(context)
     with open("stonehenge_config.py", "w+") as config_file:
         config_file.write(file_content)
-
-
-def run_command(command):
-    '''Executes a command within the current working directory'''
-    subprocess.run(
-        command.split(),
-        stdout=subprocess.PIPE,
-        check=True,
-    )

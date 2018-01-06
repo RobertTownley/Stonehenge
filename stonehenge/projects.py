@@ -1,9 +1,14 @@
+import django
 import os
 import psycopg2
 import shutil
+import subprocess
+
+from django.conf import settings
+from django.template.loader import get_template
 
 from stonehenge.file_validators import validate_config
-from stonehenge.utils import run_command
+from stonehenge.stonehenge import settings as stonehenge_settings
 
 
 def build_new_project():
@@ -19,13 +24,23 @@ class StonehengeProject(object):
 
     def __init__(self, CONFIG, *args, **kwargs):
         self.config = CONFIG
+        settings.configure(stonehenge_settings)
+        django.setup()
+
+    def run_command(self, command):
+        subprocess.run(
+            command.split(),
+            stdout=subprocess.PIPE,
+            check=True,
+        )
 
     def build(self):
         self.create_local_database()
         self.initialize_git_repository()
-        # self.create_virtual_environment()
-        # self.create_node_modules()
-        # self.create_django_project()
+        self.create_virtual_environment()
+        self.create_node_modules()
+        self.install_pip_modules()
+        self.create_django_project()
 
     def create_local_database(self):
         db = self.config['DATABASE']['local']
@@ -77,16 +92,47 @@ class StonehengeProject(object):
                 os.remove(file_location)
 
         # Create new git repo
-        run_command("git init")
-        run_command("git remote add origin {0}".format(self.config['GITHUB_REPOSITORY']))
-        run_command("git pull --quiet origin master")
+        self.run_command("git init")
+        repo = self.config['GITHUB_REPOSITORY']
+        self.run_command("git remote add origin {0}".format(repo))
+        self.run_command("git pull --quiet origin master")
         print("-- Git repository built")
 
     def create_virtual_environment(self):
-        print("Creating virtual environment")
+        env_name = self.config['VIRTUAL_ENVIRONMENT_NAME']
+        env_location = os.path.join(os.getcwd(), env_name)
+        if os.path.isdir(env_location):
+            # Delete existing virtual environment
+            shutil.rmtree(env_location)
+
+        self.run_command('python3 -m venv {0}'.format(env_name))
+        print("-- Created a virtual environment")
 
     def create_node_modules(self):
-        print("Creating node modules")
+        template = get_template("stonehenge/sample_package.json")
+        context = self.config
+        file_content = template.render(context)
+        with open('package.json', 'w+') as package_file:
+            package_file.write(file_content)
+
+        self.run_command("npm install bootstrap jquery")
+        print("-- Creating node modules")
+
+    def install_pip_modules(self):
+        for module in self.config['PIP_MODULES']:
+            command = "{0}/bin/pip install {1}".format(
+                self.config['VIRTUAL_ENVIRONMENT_NAME'],
+                module,
+            )
+            self.run_command(command)
+
+        print("-- Installed pip modules")
 
     def create_django_project(self):
-        print("Creating django project")
+        command = "{0}/bin/django-admin startproject {1}".format(
+            self.config['VIRTUAL_ENVIRONMENT_NAME'],
+            self.config['DJANGO_PROJECT_NAME'],
+        )
+        print(command)
+        self.run_command(command)
+        print("-- Created django project")
