@@ -1,0 +1,17 @@
+#!/usr/bin/env python
+import os
+import sys
+
+from stonehenge.cli_utils import print_usage
+from stonehenge.utils import create_new_config_file, configure_new_project
+
+if len(sys.argv) < 2:
+    # User forgot to supply either 'new' or 'build'
+    print_usage()
+elif sys.argv == 'new':
+    create_new_config_file()
+elif sys.argv == 'build':
+    configure_new_project()
+else:
+    msg = "Incorrect parameter supplied: {0}".format(sys.argv[1])
+    print_usage(msg=msg)
