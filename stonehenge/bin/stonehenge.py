@@ -2,20 +2,31 @@
 import os
 import sys
 
-from stonehenge.cli_utils import print_usage
+from stonehenge.cli_utils import print_help
 from stonehenge.utils import create_new_config_file, configure_new_project
 
+COMMANDS = {
+    'new': create_new_config_file,
+    'build': configure_new_project,
+}
+
+
 def main():
-    if len(sys.argv) < 2:
-        # User forgot to supply either 'new' or 'build'
-        print_usage()
-    elif sys.argv == 'new':
-        create_new_config_file()
-    elif sys.argv == 'build':
-        configure_new_project()
+    try:
+        command = sys.argv[1]
+    except IndexError:
+        print_help()
+        return
+
+    if command in COMMANDS:
+        COMMANDS[command]()
     else:
-        msg = "Incorrect parameter supplied: {0}".format(sys.argv[1])
-        print_usage(msg=msg)
+        msg = "ERROR: Invalid parameter supplied: {0}\n\n".format(
+            sys.argv[1],
+        )
+        print_help(msg=msg)
+
 
 if __name__ == "__main__":
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "stonehenge.settings")
     main()

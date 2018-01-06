@@ -1,4 +1,4 @@
-def print_usage(msg=None):
+def print_help(msg=None):
     '''Print out a message for a user who misused the CLI command'''
     if msg is not None:
         print(msg)
