@@ -19,11 +19,12 @@ def validate_config(config_file_location):
     else:
         raise Exception("Config file not found at {0}".format(config_file_location))
 
-    # Validate general settings
-    required_fields = ['PROJECT_NAME']
-    for field in required_fields:
-        if not CONFIG[field]:
-            raise Exception("Required field {0} not specified".format(field))
+    # Project Name
+    assert CONFIG['PROJECT_NAME']
+
+    # Github Repository
+    assert CONFIG['GITHUB_REPOSITORY']
+    assert 'git@' in CONFIG['GITHUB_REPOSITORY']
 
     # Validate local database
     db = CONFIG['DATABASE']['local']
