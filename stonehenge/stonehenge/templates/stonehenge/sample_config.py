@@ -17,8 +17,8 @@ import string
 from django.utils.text import slugify
 
 # REQUIRED SETTINGSs
-PROJECT_NAME = ''
-GITHUB_REPOSITORY = ''
+PROJECT_NAME = 'Test Stonehenge'
+GITHUB_REPOSITORY = 'git@github.com:RobertTownley/TestStonehenge.git'
 
 # Optional Settings
 PROJECT_AUTHOR = ""
@@ -27,21 +27,36 @@ PROJECT_LICENSE = "ISC"
 PROJECT_SLUG = slugify(PROJECT_NAME.lower()).replace("-", "_")
 PROJECT_VERSION = '1.0.0'
 VIRTUAL_ENVIRONMENT_NAME = 'ENV'
-DJANGO_PROJECT_NAME = "app"  # Set to "PROJECT_SLUG for a standard Django layout
+DJANGO_SETTINGS = {
+    'PROJECT_NAME': 'app'  # Set to "PROJECT_SLUG for a standard Django layout
+}
+
+# Deployment settings
+ENVIRONMENTS = {
+    'PRODUCTION': {
+        'ALLOWED_HOSTS': "['*']",
+        'HOSTNAME': '{0}ProductionAppserver'.format(PROJECT_SLUG),
+        'HOST_IP': '',
+    },
+    'STAGING': {
+        'HOSTNAME': '{0}StagingAppserver'.format(PROJECT_SLUG),
+        'HOST_IP': '',
+    },
+}
+
 
 # Database Settings
 DATABASE_PASSWORD = ''.join(
     random.choice(string.ascii_uppercase + string.digits) for _ in range(32)
 )
 
-POSTGRES_PASSWORD = 'postgrespassword'
-DATABASE = {
+LOCAL_POSTGRES_PASSWORD = 'postgrespassword'
+DATABASES = {
     'local': {
         'USER': PROJECT_SLUG,
         'NAME': PROJECT_SLUG + "db",
         'PASSWORD': DATABASE_PASSWORD,
         'HOST': 'localhost',
-        'POSTGRES_PASSWORD': POSTGRES_PASSWORD,
     }
 }
 
@@ -60,11 +75,13 @@ FEATURES = [
 # You probably don't need to edit anything below this line unless you're doing
 # more involved customization.
 PROJECT_CONFIGURATION = {
-    'DATABASE': DATABASE,
-    'DJANGO_PROJECT_NAME': DJANGO_PROJECT_NAME,
+    'DATABASES': DATABASES,
+    'DJANGO_SETTINGS': DJANGO_SETTINGS,
+    'ENVIRONMENTS': ENVIRONMENTS,
     'FEATURES': FEATURES,
     'GITHUB_REPOSITORY': GITHUB_REPOSITORY,
     'PIP_MODULES': PIP_MODULES,
+    'LOCAL_POSTGRES_PASSWORD': LOCAL_POSTGRES_PASSWORD,
     'PROJECT_AUTHOR': PROJECT_AUTHOR,
     'PROJECT_DESCRIPTION': PROJECT_DESCRIPTION,
     'PROJECT_LICENSE': PROJECT_LICENSE,

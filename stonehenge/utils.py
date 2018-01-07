@@ -1,6 +1,5 @@
 import django
 import os
-
 from django.conf import settings
 from django.template.loader import get_template
 

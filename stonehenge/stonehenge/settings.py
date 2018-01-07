@@ -122,7 +122,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = 'MEDIAROOT'
+STATIC_ROOT = 'STATICROOT'
 STATIC_URL = '/static/'
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 # Logging
 LOGGING = {}
