@@ -27,7 +27,7 @@ def validate_config(config_file_location):
     assert 'git@' in CONFIG['GITHUB_REPOSITORY']
 
     # Validate local database
-    db = CONFIG['DATABASES']['local']
+    db = CONFIG['ENVIRONMENTS']['LOCAL']['DATABASE']
     for key in db.keys():
         if not db[key]:
             raise Exception("Required database field {0} not specified".format(key))

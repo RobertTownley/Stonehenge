@@ -11,8 +11,7 @@ import datetime
 year = datetime.datetime.now().year
 PROJECT_NAME = "Stonehenge Example {0}".format(year)
 '''
-import random
-import string
+import secrets
 
 from django.utils.text import slugify
 
@@ -31,38 +30,72 @@ DJANGO_SETTINGS = {
     'PROJECT_NAME': 'app'  # Set to "PROJECT_SLUG for a standard Django layout
 }
 
+
+def generate_pass(length=31):
+    '''Semi-secure method for generating passwords.
+
+    Feel free to implement your own below.
+    '''
+    return secrets.token_hex(length)
+
+
 # Deployment settings
+PRODUCTION_IP = 'CHANGEME'
+STAGING_IP = 'CHANGEME'
+
 ENVIRONMENTS = {
+    'LOCAL': {
+        'DATABASE': {
+            'USER': PROJECT_SLUG,
+            'NAME': PROJECT_SLUG + "db",
+            'PASSWORD': generate_pass(),
+            'HOST': 'localhost',
+            'PORT': '5432',
+        },
+    },
     'PRODUCTION': {
         'ALLOWED_HOSTS': "['*']",
+        'DATABASE': {
+            'USER': PROJECT_SLUG,
+            'NAME': PROJECT_SLUG + "db",
+            'PASSWORD': generate_pass(),
+            'HOST': PRODUCTION_IP,
+            'PORT': '5432',
+        },
         'HOSTNAME': '{0}ProductionAppserver'.format(PROJECT_SLUG),
-        'HOST_IP': '',
+        'HOST_IP': PRODUCTION_IP,
     },
     'STAGING': {
+        'DATABASE': {
+            'USER': PROJECT_SLUG,
+            'NAME': PROJECT_SLUG + "db",
+            'PASSWORD': generate_pass(),
+            'HOST': STAGING_IP,
+            'PORT': '5432',
+        },
         'HOSTNAME': '{0}StagingAppserver'.format(PROJECT_SLUG),
-        'HOST_IP': '',
+        'HOST_IP': STAGING_IP,
+    },
+    'TESTING': {
+        'DATABASE': {
+            'USER': PROJECT_SLUG,
+            'NAME': PROJECT_SLUG + "testdb",
+            'HOST': 'localhost',
+            'PORT': '5432',
+        },
     },
 }
 
 
 # Database Settings
-DATABASE_PASSWORD = ''.join(
-    random.choice(string.ascii_uppercase + string.digits) for _ in range(32)
-)
-
 LOCAL_POSTGRES_PASSWORD = 'postgrespassword'
-DATABASES = {
-    'local': {
-        'USER': PROJECT_SLUG,
-        'NAME': PROJECT_SLUG + "db",
-        'PASSWORD': DATABASE_PASSWORD,
-        'HOST': 'localhost',
-    }
-}
 
 # PIP Settings
 PIP_MODULES = [
     'Django>=2.0',
+    'flake8',
+    'psycopg2>=2.7',
+    'django-extensions',
 ]
 
 FEATURES = [
@@ -75,7 +108,6 @@ FEATURES = [
 # You probably don't need to edit anything below this line unless you're doing
 # more involved customization.
 PROJECT_CONFIGURATION = {
-    'DATABASES': DATABASES,
     'DJANGO_SETTINGS': DJANGO_SETTINGS,
     'ENVIRONMENTS': ENVIRONMENTS,
     'FEATURES': FEATURES,

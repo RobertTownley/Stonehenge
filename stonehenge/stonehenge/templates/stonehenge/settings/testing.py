@@ -1,8 +1,7 @@
 from .base import *
 from .SECRETS import SECRETS
 
-ALLOWED_HOSTS = {{ ENVIRONMENTS.PRODUCTION.ALLOWED_HOSTS|safe }}
-DEBUG = FALSE
+DEBUG = True
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -13,7 +12,6 @@ DATABASES = {
         'PORT': SECRETS['DB_PORT'],
     },
 }
-SECRET_KEY = SECRETS['SECRET_KEY']
 
 STATICFILES_DIRS = [ 
     os.path.join(

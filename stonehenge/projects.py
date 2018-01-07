@@ -10,6 +10,9 @@ from django.template.loader import get_template
 
 from stonehenge.file_validators import validate_config
 from stonehenge.stonehenge import settings as stonehenge_settings
+from stonehenge.utils import customize_base_settings_data
+from stonehenge.utils import get_gitignore_content
+from stonehenge.utils import customize_url_file_content
 
 
 def build_new_project():
@@ -53,16 +56,16 @@ class StonehengeProject(object):
         self.run_command(command)
 
     def build(self):
-        # self.create_local_database()
-        # self.initialize_git_repository()
-        # self.create_virtual_environment()
-        # self.create_node_modules()
-        # self.install_pip_modules()
+        self.create_local_database()
+        self.initialize_git_repository()
+        self.create_virtual_environment()
+        self.create_node_modules()
+        self.install_pip_modules()
         self.create_django_project()
 
     def create_local_database(self):
         print("-- Creating database")
-        db = self.config['DATABASES']['local']
+        db = self.config['ENVIRONMENTS']['LOCAL']['DATABASE']
 
         # Connect to PostgreSQL database
         connection = psycopg2.connect(
@@ -115,6 +118,11 @@ class StonehengeProject(object):
         self.run_command("git remote add origin {0}".format(repo))
         self.run_command("git pull --quiet origin master")
 
+        # Adding files to .gitignore
+        gitignore_content = get_gitignore_content(config=self.config)
+        with open('.gitignore', 'a') as gitignore_file:
+            gitignore_file.write(gitignore_content)
+
     def create_virtual_environment(self):
         print("-- Creating virtual environment")
         env_name = self.config['VIRTUAL_ENVIRONMENT_NAME']
@@ -160,9 +168,10 @@ class StonehengeProject(object):
         # Configure Django project
         self.create_public_app()
         self.customize_settings_files()
+        self.customize_urls()
 
-        # self.run_management_command("makemigrations")
-        # self.run_management_command("migrate")
+        self.run_management_command("makemigrations")
+        self.run_management_command("migrate")
 
     def create_public_app(self):
         PUBLIC_DIR = os.path.join(self.BASE_DIR, 'public')
@@ -181,14 +190,6 @@ class StonehengeProject(object):
         )
         os.mkdir(self.SETTINGS_DIR)
 
-        # Move existing settings.py into settings/base.py
-        os.rename(self.SETTINGS_DIR + ".py", self.SETTINGS_DIR + "/base.py")
-
-        # Modifications to settings/base.py
-        with open("{0}/base.py".format(self.SETTINGS_DIR), "a") as settings_file:
-            content = "\nAUTH_USER_MODEL = 'public.User'\n"
-            settings_file.write(content)
-
         # Create files for local, staging, test, and production
         STONEHENGE_SETTINGS_DIR = os.path.join(
             self.STONEHENGE_TEMPLATES_DIR,
@@ -196,6 +197,10 @@ class StonehengeProject(object):
         )
 
         for settings_filename in os.listdir(STONEHENGE_SETTINGS_DIR):
+            if settings_filename.endswith("swp") or "SECRETS" in settings_filename:
+                # SECRETS should be ignored. swp is because I keep stupidly leaving files open
+                continue
+
             settings_filepath = os.path.join(STONEHENGE_SETTINGS_DIR, settings_filename)
             template_name = settings_filepath.replace(
                 self.STONEHENGE_TEMPLATES_DIR + "/",
@@ -206,3 +211,34 @@ class StonehengeProject(object):
             destination_filepath = os.path.join(self.SETTINGS_DIR, settings_filename)
             with open(destination_filepath, "w+") as destination_file:
                 destination_file.write(file_content)
+
+        # Modifications to settings/base.py
+        settings_filepath = "{0}/base.py".format(self.SETTINGS_DIR)
+        os.rename(self.SETTINGS_DIR + ".py", settings_filepath)
+        with open(settings_filepath, 'r') as settings_file:
+            filedata = settings_file.read()
+        filedata = customize_base_settings_data(filedata, config=self.config)
+        with open(settings_filepath, 'w') as settings_file:
+            settings_file.write(filedata)
+
+        # Generate the local SECRETS.py file
+        secrets_filepath = os.path.join(self.SETTINGS_DIR, "SECRETS.py")
+        secrets_template_name = 'stonehenge/settings/SECRETS.py'
+        secrets_template = get_template(secrets_template_name)
+        secrets_content = secrets_template.render({
+            'db': self.config['ENVIRONMENTS']['LOCAL']['DATABASE'],
+        })
+        with open(secrets_filepath, "w+") as secrets_file:
+            secrets_file.write(secrets_content)
+
+    def customize_urls(self):
+        url_filepath = os.path.join(
+            self.BASE_DIR,
+            self.config['DJANGO_SETTINGS']['PROJECT_NAME'],
+            "urls.py",
+        )
+        with open(url_filepath, 'r') as url_file:
+            filedata = url_file.read()
+        filedata = customize_url_file_content(filedata, config=self.config)
+        with open(url_filepath, 'w') as url_file:
+            url_file.write(filedata)
