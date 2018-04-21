@@ -1,19 +1,31 @@
-def print_help(msg=None):
-    '''Print out a message for a user who misused the CLI command'''
-    if msg is not None:
-        print(msg)
+import os
+import subprocess
 
-    print("""Welcome to the Stonehenge project builder!
 
-To use this utility, you'll first create a configuration file, and
-then build the project based off of that configuration.
+def create_new_project_file():
+    '''Returns the default file contents for a new project
 
-You can either create the config file (stonehenge_config.py)
-yourself, or you can run "stonehenge new" to generate a file with
-some helpful pre-populated defaults.
+    Output from this command is saved to the stonehenge.py file that a new
+    user will execute to create, initialize, and deploy their new project.
+    '''
 
-Once the file has been created, you can run "stonehenge build" to
-create your project.
+    # Gather default file contents
+    stonehenge_dir = os.path.dirname(os.path.abspath(__file__))
+    filepath = os.path.join(
+        stonehenge_dir,
+        "templates/stonehenge.py",
+    )
+    with open(filepath) as project_file:
+        contents = project_file.read()
 
-For more information, or for usage examples, visit
-https://github.com/RobertTownley/Stonehenge.""")
+    # Save the new file to the expected filepath
+    filename = "build_stonehenge.py"
+    with open(filename, "w") as new_file:
+        new_file.write(contents)
+
+    # Set the new file as executable
+    filepath = os.path.join(
+        os.getcwd(),
+        filename,
+    )
+    subprocess.call(['chmod', '+x', filepath])
