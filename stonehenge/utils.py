@@ -1,3 +1,0 @@
-PYTHON_DEPENDENCIES = [
-    'django',
-]

@@ -13,7 +13,7 @@ class StonehengeProject(DefaultProject):
     name = "Stonehenge Sample"
 
     # Absolute filepath of desired project location on your local filesystem
-    PROJECT_ROOT = '/home/rtownley/Laboratory/SampleStonehenge/'
+    PROJECT_ROOT = '/home/robert/Laboratory/SampleStonehenge/'
 
     # Local Database Settings
     LOCAL_DATABASE = {
@@ -25,7 +25,7 @@ class StonehengeProject(DefaultProject):
     }
 
     # Virtual Environment and python version to use
-    PYTHON_PATH = "/usr/local/bin/python3"
+    PYTHON_PATH = "/usr/bin/python3"
     VIRTUAL_ENVIRONMENT_NAME = "venv"
 
     # Version Control
@@ -49,6 +49,7 @@ class StonehengeProject(DefaultProject):
         self.initialize_git_repository()
         self.install_python_dependencies()
         self.install_frontend_build()
+        self.create_django_project()
         print("I'm getting built!")
 
 

@@ -3,10 +3,13 @@ import psycopg2
 import shutil
 import subprocess
 
-from stonehenge.utils import PYTHON_DEPENDENCIES
+from django.utils.text import slugify
+
+from stonehenge.mixins import DjangoMixin
+from stonehenge.utils.dependencies import FRONTEND_DEPENDENCIES, PYTHON_DEPENDENCIES
 
 
-class DefaultProject(object):
+class DefaultProject(DjangoMixin):
     '''Object representation of a new project'''
 
     def validate_system(self):
@@ -20,9 +23,9 @@ class DefaultProject(object):
     def create_project_root(self):
         '''Clear out existing project root location if it exists'''
         command = "rm -rf {0}".format(self.PROJECT_ROOT)
-        self.run_system_command(command, cwd=os.getcwd())
+        self.run(command, cwd=os.getcwd())
         command = "mkdir -p {0}".format(self.PROJECT_ROOT)
-        self.run_system_command(command, cwd=os.getcwd())
+        self.run(command, cwd=os.getcwd())
 
     def create_local_database(self):
         # Connect to PostgreSQL database
@@ -84,9 +87,9 @@ class DefaultProject(object):
             self.PYTHON_PATH,
             virtualenv_path,
         )
-        self.run_system_command(command)
+        self.run(command)
         command = "chmod -R u+x {0}".format(env_location)
-        self.run_system_command(command)
+        self.run(command)
 
     def initialize_git_repository(self):
         git_location = os.path.join(self.PROJECT_ROOT, ".git")
@@ -100,13 +103,13 @@ class DefaultProject(object):
 
         # Create new git repo
         command = "git init {0}".format(self.PROJECT_ROOT)
-        self.run_system_command(command)
+        self.run(command)
         command = "git --git-dir {0} remote add {1} {2}".format(
             git_location,
             self.REMOTE_NAME,
             self.REMOTE_REPOSITORY,
         )
-        self.run_system_command(command)
+        self.run(command)
 
         # Create .gitignore
         filepath = os.path.join(
@@ -129,7 +132,7 @@ class DefaultProject(object):
             "git pull origin master",
         ]
         for command in commands:
-            self.run_system_command(command)
+            self.run(command)
 
     def install_python_dependencies(self):
         virtualenv_location = os.path.join(
@@ -137,20 +140,21 @@ class DefaultProject(object):
             self.VIRTUAL_ENVIRONMENT_NAME,
         )
         command = "{0}/bin/pip install --upgrade pip"
-        self.run_system_command(command.format(virtualenv_location))
+        self.run(command.format(virtualenv_location))
         for dependency in PYTHON_DEPENDENCIES:
             command = "{0}/bin/pip install {1}"
-            self.run_system_command(command.format(
+            self.run(command.format(
                 virtualenv_location,
                 dependency,
             ))
 
     def install_frontend_build(self):
-        '''Initialize a react app'''
-        command = "create-react-app stonehengefrontend"
-        self.run_system_command(command)
+        '''Initialize frontend build of the app'''
+        self.run('npm init -y')
+        for dependency in FRONTEND_DEPENDENCIES:
+            self.run('npm install {0}'.format(dependency))
 
-    def run_system_command(self, command, cwd=None):
+    def run(self, command, cwd=None):
         if not cwd:
             cwd = self.PROJECT_ROOT
         process = subprocess.Popen(
@@ -159,9 +163,6 @@ class DefaultProject(object):
             cwd=cwd,
         )
         process.communicate()
-
-    def create_node_modules(self):
-        pass
 
     '''
     def create_django_project(self):
@@ -200,3 +201,7 @@ class DefaultProject(object):
     @property
     def STONEHENGE_DIR(self):
         return os.path.dirname(os.path.abspath(__file__))
+
+    @property
+    def PROJECT_SLUG(self):
+        return slugify(self.PROJECT_NAME).lower()
