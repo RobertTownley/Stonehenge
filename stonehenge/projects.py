@@ -5,11 +5,11 @@ import subprocess
 
 from django.utils.text import slugify
 
-from stonehenge.mixins import DjangoMixin
+from stonehenge.mixins import DjangoMixin, FileMixin
 from stonehenge.utils.dependencies import FRONTEND_DEPENDENCIES, PYTHON_DEPENDENCIES
 
 
-class DefaultProject(DjangoMixin):
+class DefaultProject(FileMixin, DjangoMixin):
     '''Object representation of a new project'''
 
     def validate_system(self):
@@ -79,13 +79,9 @@ class DefaultProject(DjangoMixin):
             # Delete existing virtual environment
             shutil.rmtree(env_location)
 
-        virtualenv_path = os.path.join(
-            self.PROJECT_ROOT,
-            self.VIRTUAL_ENVIRONMENT_NAME,
-        )
         command = "{0} -m venv {1}".format(
             self.PYTHON_PATH,
-            virtualenv_path,
+            self.VIRTUALENV_PATH,
         )
         self.run(command)
         command = "chmod -R u+x {0}".format(env_location)
@@ -102,14 +98,13 @@ class DefaultProject(DjangoMixin):
                 os.remove(file_location)
 
         # Create new git repo
-        command = "git init {0}".format(self.PROJECT_ROOT)
-        self.run(command)
-        command = "git --git-dir {0} remote add {1} {2}".format(
-            git_location,
-            self.REMOTE_NAME,
-            self.REMOTE_REPOSITORY,
-        )
-        self.run(command)
+        self.run([
+            "git init {0}".format(self.PROJECT_ROOT),
+            "git remote add {0} {1}".format(
+                self.REMOTE_NAME,
+                self.REMOTE_REPOSITORY,
+            ),
+        ])
 
         # Create .gitignore
         filepath = os.path.join(
@@ -129,22 +124,18 @@ class DefaultProject(DjangoMixin):
         commands = [
             "git add --all :/",
             "git commit -m 'initialProjectCommit'",
-            "git pull origin master",
+            "git pull origin master --allow-unrelated-histories",
         ]
         for command in commands:
             self.run(command)
 
     def install_python_dependencies(self):
-        virtualenv_location = os.path.join(
-            self.PROJECT_ROOT,
-            self.VIRTUAL_ENVIRONMENT_NAME,
-        )
         command = "{0}/bin/pip install --upgrade pip"
-        self.run(command.format(virtualenv_location))
+        self.run(command.format(self.VIRTUALENV_PATH))
         for dependency in PYTHON_DEPENDENCIES:
             command = "{0}/bin/pip install {1}"
             self.run(command.format(
-                virtualenv_location,
+                self.VIRTUALENV_PATH,
                 dependency,
             ))
 
@@ -154,15 +145,28 @@ class DefaultProject(DjangoMixin):
         for dependency in FRONTEND_DEPENDENCIES:
             self.run('npm install {0}'.format(dependency))
 
-    def run(self, command, cwd=None):
+    def run(self, commands, cwd=None):
         if not cwd:
             cwd = self.PROJECT_ROOT
-        process = subprocess.Popen(
-            command.split(),
-            stdout=subprocess.PIPE,
-            cwd=cwd,
+
+        if type(commands) != list:
+            commands = [commands]
+
+        for command in commands:
+            process = subprocess.Popen(
+                command.split(),
+                stdout=subprocess.PIPE,
+                cwd=cwd,
+            )
+            process.communicate()
+
+    def run_management_command(self, command):
+        '''Run a management command within the virtual environment'''
+        command = "{0}/bin/python manage.py {1}".format(
+            self.VIRTUALENV_PATH,
+            command,
         )
-        process.communicate()
+        self.run(command)
 
     '''
     def create_django_project(self):
@@ -204,4 +208,19 @@ class DefaultProject(DjangoMixin):
 
     @property
     def PROJECT_SLUG(self):
-        return slugify(self.PROJECT_NAME).lower()
+        slug = slugify(self.PROJECT_NAME).lower()
+        return slug.replace("-", "_")
+
+    @property
+    def DJANGO_ROOT(self):
+        return os.path.join(
+            self.PROJECT_ROOT,
+            self.PROJECT_SLUG,
+        )
+
+    @property
+    def VIRTUALENV_PATH(self):
+        return os.path.join(
+            self.PROJECT_ROOT,
+            self.VIRTUAL_ENVIRONMENT_NAME,
+        )

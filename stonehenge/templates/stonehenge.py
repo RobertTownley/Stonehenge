@@ -10,10 +10,19 @@ class StonehengeProject(DefaultProject):
     '''
 
     # Your project name
-    name = "Stonehenge Sample"
+    PROJECT_NAME = "Stonehenge Sample"
+
+    # Project Description, used in Meta attributes of default pages
+    PROJECT_DESCRIPTION = "A modern, clean website"
 
     # Absolute filepath of desired project location on your local filesystem
     PROJECT_ROOT = '/home/robert/Laboratory/SampleStonehenge/'
+
+    # Project Creator, used in HTML meta tags
+    PROJECT_AUTHOR = "My Organization"
+
+    # Default language for templates
+    PROJECT_LANGUAGE = "en"
 
     # Local Database Settings
     LOCAL_DATABASE = {
@@ -31,6 +40,13 @@ class StonehengeProject(DefaultProject):
     # Version Control
     REMOTE_REPOSITORY = 'git@github.com:RobertTownley/TestStonehenge.git'
     REMOTE_NAME = 'origin'
+
+    # Social Authentication Settings
+    # Great guide for social authentication setup:
+    # simpleisbetterthancomplex.com/tutorial/2016/10/24/how-to-add-social-login-to-django.html
+    USE_SOCIAL_AUTHENTICATION = True
+    SOCIAL_AUTH_FACEBOOK_KEY = '451821651x33143'
+    SOCIAL_AUTH_FACEBOOK_SECRET = '524fada3c3ca5adgb279da535da1d863'
 
     def validate_system(self):
         '''TODO: Add validation steps'''
@@ -50,7 +66,6 @@ class StonehengeProject(DefaultProject):
         self.install_python_dependencies()
         self.install_frontend_build()
         self.create_django_project()
-        print("I'm getting built!")
 
 
 project = StonehengeProject()

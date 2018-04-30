@@ -1,0 +1,41 @@
+{% load staticfiles %}
+<!doctype html>
+<html class="no-js" lang="{{ PROJECT_LANGUAGE }}">
+    <head>
+        {% block meta %}
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>{{ PROJECT_NAME }}</title>
+        <meta name="author" content="{{ PROJECT_AUTHOR }}">
+        <meta name="description" content="{{ PROJECT_DESCRIPTION }}">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <link rel="manifest" href="site.webmanifest">
+        <link rel="apple-touch-icon" href="icon.png">
+        <!-- Place favicon.ico in the root directory -->
+        {% endblock %}
+
+        {% block css %}
+        <link rel="stylesheet" href="{% static "bootstrap/dist/css/bootstrap.min.css" %}">
+        <link rel="stylesheet" href="{% static "public/css/public.css" %}">
+        {% endblock %}
+    </head>
+    <body id="page-top">
+        {% block nav %}{% include "public/components/nav.html" %}{% endblock %}
+        {% block content %}{% endblock %}
+        {% block footer %}{% include "public/components/footer.html" %}{% endblock %}
+        {% block js %}
+        <script src="{% static "jquery/dist/jquery.min.js" %}"></script>
+        <script src="{% static "bootstrap/dist/js/bootstrap.min.js" %}"></script>
+        <script src="{% static "public/js/public.js" %}"></script>
+
+        <!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. -->
+        <script>
+            window.ga=function(){ga.q.push(arguments)};ga.q=[];ga.l=+new Date;
+            ga('create','UA-XXXXX-Y','auto');ga('send','pageview')
+        </script>
+        <script src="https://www.google-analytics.com/analytics.js" async defer></script>
+        {% endblock %}
+    </body>
+</html>
