@@ -9,11 +9,13 @@ from stonehenge.utils import copy_from_template
 from stonehenge.utils import generate_password
 from stonehenge.utils import config
 from stonehenge.utils import PROJECT_DIR
+from stonehenge.utils import TEMPLATES_DIR
+from stonehenge.utils import git_commit
 
 
 def install_python_dependencies(project):
     '''Installs Python requirements for a project'''
-    copy_from_template('requirements.txt')
+    copy_from_template(project, 'requirements.txt')
     call(['pip', 'install', '-r', 'requirements.txt'])
 
 
@@ -74,10 +76,9 @@ def setup_version_control(project):
     if os.path.isdir(os.path.join(PROJECT_DIR, '.git')):
         shutil.rmtree(os.path.join(PROJECT_DIR, '.git'))
 
-    call(['rm', '.git*'])
     call(['git', 'init'])
     call(['git', 'remote', 'add', 'origin', project.GIT_REPOSITORY])
-    copy_from_template('.gitignore')
+    copy_from_template(project, '.gitignore')
 
 
 def build_backend(project):
@@ -85,14 +86,49 @@ def build_backend(project):
 
     Called after building frontend to accommodate create-react-app
     '''
+    # Build the initial project
     call(['django-admin', 'startproject', project.slug, '.'])
-    for filename in os.listdir(os.path.join(PROJECT_DIR, project.slug)):
-        shutil.move(
-            os.path.join(PROJECT_DIR, project.slug, filename),
-            os.path.join(PROJECT_DIR, filename),
-        )
+
+    # Configure settings
+    os.remove(os.path.join(PROJECT_DIR, project.slug, 'settings.py'))
+    os.makedirs(os.path.join(PROJECT_DIR, project.slug, 'settings'))
+    for settings_file in os.listdir(os.path.join(TEMPLATES_DIR, 'settings')):
+        source = os.path.join('settings', settings_file)
+        destination = os.path.join(PROJECT_DIR, project.slug, 'settings', settings_file)
+        copy_from_template(project, source, dest=destination)
+
+    # Set up URLs
+    destination = os.path.join(PROJECT_DIR, project.slug, 'urls.py')
+    copy_from_template(project, 'urls.py', dest=destination)
+
+    # Create a template directory for exported webpack bundles
+    os.makedirs(os.path.join(PROJECT_DIR, 'templates'))
+    destination = os.path.join(PROJECT_DIR, 'templates', 'index.html')
+    copy_from_template(project, 'index.html', dest=destination)
 
 
 def build_frontend(project):
     '''Build out the frontend'''
-    call(['npx', 'create-react-app', project.slug])
+    call(['npx', 'create-react-app', 'frontend'])
+    for filename in os.listdir(os.path.join(PROJECT_DIR, 'frontend')):
+        if filename != project.slug:
+            shutil.move(
+                os.path.join(PROJECT_DIR, 'frontend', filename),
+                os.path.join(PROJECT_DIR, filename),
+            )
+    shutil.rmtree(os.path.join(PROJECT_DIR, 'frontend'))
+    git_commit("Pre create-react-app ejection commit")
+    call(['npm', 'run', 'eject'])  # TODO: Find a way to have this not require user input
+
+    # Build out webpack configuration to allow it to talk to Django
+    call('npm install webpack-bundle-tracker --save-dev'.split(' '))
+    destination = os.path.join(PROJECT_DIR, 'config/paths.js')
+    copy_from_template(project, 'config/paths.js', dest=destination)
+    destination = os.path.join(PROJECT_DIR, 'config/webpack.config.dev.js')
+    copy_from_template(project, 'config/webpack.config.dev.js', dest=destination)
+    destination = os.path.join(PROJECT_DIR, 'config/webpackDevServer.config.js')
+    copy_from_template(project, 'config/webpackDevServer.config.js', dest=destination)
+    call('mkdir -p assets/bundles'.split(' '))
+
+    # Configure React Redux and React Router
+    call('npm install --save react-router-dom'.split(' '))

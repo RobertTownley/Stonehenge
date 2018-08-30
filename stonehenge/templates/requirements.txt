@@ -1,5 +1,6 @@
 django
 djangorestframework
+django-webpack-loader
 flake8
 pillow
 psycopg2-binary
