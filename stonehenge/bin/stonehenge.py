@@ -3,12 +3,12 @@ import os
 import sys
 
 from stonehenge.cli_utils import print_help
-from stonehenge.utils import create_new_config_file
-from stonehenge.projects import build_new_project
+from stonehenge.new_project import generate_stonehenge_file
+from stonehenge.build_project import build_project_from_stonehenge_file
 
 COMMANDS = {
-    'new': create_new_config_file,
-    'build': build_new_project,
+    'new': generate_stonehenge_file,
+    'build': build_project_from_stonehenge_file,
 }
 
 
