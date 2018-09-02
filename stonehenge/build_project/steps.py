@@ -122,13 +122,17 @@ def build_frontend(project):
 
     # Build out webpack configuration to allow it to talk to Django
     call('npm install webpack-bundle-tracker --save-dev'.split(' '))
-    destination = os.path.join(PROJECT_DIR, 'config/paths.js')
-    copy_from_template(project, 'config/paths.js', dest=destination)
-    destination = os.path.join(PROJECT_DIR, 'config/webpack.config.dev.js')
-    copy_from_template(project, 'config/webpack.config.dev.js', dest=destination)
-    destination = os.path.join(PROJECT_DIR, 'config/webpackDevServer.config.js')
-    copy_from_template(project, 'config/webpackDevServer.config.js', dest=destination)
+    copy_from_template(project, 'config/paths.js')
+    copy_from_template(project, 'config/webpack.config.dev.js')
+    copy_from_template(project, 'config/webpackDevServer.config.js')
     call('mkdir -p assets/bundles'.split(' '))
 
-    # Configure React Redux and React Router
+    # Create initial React components
     call('npm install --save react-router-dom'.split(' '))
+    call('mkdir -p src/components/'.split(' '))
+    copy_from_template(project, 'src/App.js')
+    components_dir = os.path.join(TEMPLATES_DIR, 'src/components')
+    components = os.listdir(components_dir)
+    for filepath in components:
+        source = os.path.join('src/components', filepath)
+        copy_from_template(project, source)

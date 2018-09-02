@@ -47,6 +47,9 @@ def copy_from_template(project, template_file, dest=None):
     if template_file.endswith('.swp'):
         return None
 
+    if not dest:
+        dest = os.path.join(PROJECT_DIR, template_file)
+
     with open(filepath, 'r') as read_file:
         contents = read_file.read()
 
