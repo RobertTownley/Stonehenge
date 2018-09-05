@@ -3,3 +3,6 @@ include LICENSE.txt
 
 # Include the data files
 recursive-include data *
+
+# Include all frontend source files
+recursive-include stonehenge *
