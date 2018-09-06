@@ -1,0 +1,10 @@
+.hero {
+    img {
+        max-width: 100vw;
+    }
+    .hero-content {
+        position: absolute;
+        text-shadow: $text-shadow;
+        z-index: 1;
+    }
+}
