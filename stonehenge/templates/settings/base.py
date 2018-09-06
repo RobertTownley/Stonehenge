@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'webpack_loader',
 
     'public',
+    'users',
 ]
 
 MIDDLEWARE = [
