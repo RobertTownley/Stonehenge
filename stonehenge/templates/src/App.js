@@ -1,16 +1,24 @@
 import React, { Component } from 'react';
-import {Route, Switch, BrowserRouter} from 'react-router-dom';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import Nav from './components/Nav';
 import Home from './components/Home';
+import About from './components/About';
+import Contact from './components/Contact';
 import NotFound from './components/NotFound';
 
 class App extends Component {
   render() {
     return (
       <BrowserRouter>
-        <Switch>
-          <Route exact path="/" component={Home} />
-          <Route component={NotFound} />
-        </Switch>
+        <div id='wrapper'>
+          <Nav />
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <Route exact path='/about' component={About} />
+            <Route exact path='/contact' component={Contact} />
+            <Route component={NotFound} />
+          </Switch>
+        </div>
       </BrowserRouter>
     );
   }

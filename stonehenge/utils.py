@@ -41,6 +41,18 @@ def get_user_project_from_filepath(filepath):
     return project
 
 
+def copy_dir_from_template(project, source_dir, dest=None):
+    '''Copies an entire directory recusively'''
+    dirpath = os.path.join(TEMPLATES_DIR, source_dir)
+    if os.path.isdir(dirpath):
+        files = os.listdir(dirpath)
+        for filepath in files:
+            full_filepath = os.path.join(source_dir, filepath)
+            copy_dir_from_template(project, full_filepath)
+    else:
+        copy_from_template(project, source_dir)
+
+
 def copy_from_template(project, template_file, dest=None):
     '''Copies a file from a stonehenge template into the new project'''
     filepath = os.path.join(TEMPLATES_DIR, template_file)
@@ -60,6 +72,10 @@ def copy_from_template(project, template_file, dest=None):
         except TypeError as e:
             msg = "Attribute '{0}' not defined in project. Error encountered while building {1}."
             raise TypeError(msg.format(variable, template_file))
+
+    write_filepath = dest or os.path.join(PROJECT_DIR, template_file)
+    if not os.path.exists(os.path.dirname(write_filepath)):
+        os.makedirs(os.path.dirname(write_filepath))
 
     with open(dest or os.path.join(PROJECT_DIR, template_file), 'w') as write_file:
         write_file.write(contents)

@@ -6,6 +6,7 @@ from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from subprocess import call
 
 from stonehenge.utils import copy_from_template
+from stonehenge.utils import copy_dir_from_template
 from stonehenge.utils import generate_password
 from stonehenge.utils import config
 from stonehenge.utils import PROJECT_DIR
@@ -107,7 +108,8 @@ def build_backend(project):
     # Create a template directory for exported webpack bundles
     os.makedirs(os.path.join(PROJECT_DIR, 'templates'))
     destination = os.path.join(PROJECT_DIR, 'templates', 'index.html')
-    copy_from_template(project, 'index.html', dest=destination)
+    copy_dir_from_template(project, 'public')
+    call('python manage.py migrate'.split(' '))
 
 
 def build_frontend(project):
@@ -122,6 +124,16 @@ def build_frontend(project):
     shutil.rmtree(os.path.join(PROJECT_DIR, 'frontend'))
     git_commit("Pre create-react-app ejection commit")
     call(['npm', 'run', 'eject'])  # TODO: Find a way to have this not require user input
+
+    # Install node dependencies
+    FRONTEND_DEV_DEPENDENCIES = [
+        'style-loader',
+        'css-loader',
+        'sass-loader',
+        'node-sass',
+    ]
+    for dep in FRONTEND_DEV_DEPENDENCIES:
+        call('npm install {0} --save-dev'.format(dep).split(' '))
 
     # Build out webpack configuration to allow it to talk to Django
     call('npm install webpack-bundle-tracker --save-dev'.split(' '))
