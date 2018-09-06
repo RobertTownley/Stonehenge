@@ -75,6 +75,8 @@ def setup_version_control(project):
     '''Configures version control for the project'''
     if os.path.isdir(os.path.join(PROJECT_DIR, '.git')):
         shutil.rmtree(os.path.join(PROJECT_DIR, '.git'))
+    if os.path.isfile(os.path.join(PROJECT_DIR, '.gitignore')):
+        os.remove(os.path.join(PROJECT_DIR, '.gitignore'))
 
     call(['git', 'init'])
     call(['git', 'remote', 'add', 'origin', project.GIT_REPOSITORY])
@@ -88,6 +90,7 @@ def build_backend(project):
     '''
     # Build the initial project
     call(['django-admin', 'startproject', project.slug, '.'])
+    call('python manage.py startapp public'.split(' '))
 
     # Configure settings
     os.remove(os.path.join(PROJECT_DIR, project.slug, 'settings.py'))

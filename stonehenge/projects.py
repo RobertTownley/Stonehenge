@@ -20,8 +20,8 @@ class StonehengeProject:
         install_python_dependencies(self)
         configure_database(self)
         setup_version_control(self)
-        build_frontend(self)
         build_backend(self)
+        build_frontend(self)
 
     @property
     def slug(self):
