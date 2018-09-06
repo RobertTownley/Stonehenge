@@ -7,6 +7,7 @@ nav {
         justify-content: space-between;
         a.Nav__brand {
             align-items: center;
+            color: white;
             display: flex;
             font-size: 28px;
             padding-left: 20px;
@@ -22,9 +23,11 @@ nav {
                     box-sizing: border-box;
                     padding: 5px 20px;
                     a {
+                        color: white;
                         text-decoration: none;
                         text-shadow: $text-shadow;
                     }
+                }
             }
         }
     }

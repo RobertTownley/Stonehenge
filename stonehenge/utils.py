@@ -59,26 +59,40 @@ def copy_from_template(project, template_file, dest=None):
     if template_file.endswith('.swp'):
         return None
 
-    if not dest:
-        dest = os.path.join(PROJECT_DIR, template_file)
-
-    with open(filepath, 'r') as read_file:
-        contents = read_file.read()
-
-    while "??? " in contents:
-        variable = contents.split("??? ")[1].split(" !!!")[0]
-        try:
-            contents = contents.replace("??? {0} !!!".format(variable), getattr(project, variable))
-        except TypeError as e:
-            msg = "Attribute '{0}' not defined in project. Error encountered while building {1}."
-            raise TypeError(msg.format(variable, template_file))
-
     write_filepath = dest or os.path.join(PROJECT_DIR, template_file)
     if not os.path.exists(os.path.dirname(write_filepath)):
         os.makedirs(os.path.dirname(write_filepath))
 
-    with open(dest or os.path.join(PROJECT_DIR, template_file), 'w') as write_file:
-        write_file.write(contents)
+    if not dest:
+        dest = os.path.join(PROJECT_DIR, template_file)
+
+    if any([
+        filepath.lower().endswith('.jpg'),
+        filepath.lower().endswith('.png'),
+        filepath.lower().endswith('.svg'),
+    ]):
+        # File should be copied over as binary data
+        with open(filepath, 'rb') as read_file:
+            contents = read_file.read()
+        with open(write_filepath, 'wb') as write_file:
+            write_file.write(contents)
+    else:
+        with open(filepath, 'r') as read_file:
+            contents = read_file.read()
+
+        while "??? " in contents:
+            variable = contents.split("??? ")[1].split(" !!!")[0]
+            try:
+                contents = contents.replace(
+                    "??? {0} !!!".format(variable),
+                    getattr(project, variable)
+                )
+            except TypeError as e:
+                msg = "Attribute '{0}' not set for project. Error encountered while building {1}."
+                raise TypeError(msg.format(variable, template_file))
+
+        with open(write_filepath, 'w') as write_file:
+            write_file.write(contents)
 
 
 def generate_password():

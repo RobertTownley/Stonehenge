@@ -111,6 +111,7 @@ def build_backend(project):
     destination = os.path.join(PROJECT_DIR, 'templates', 'index.html')
     copy_dir_from_template(project, 'public')
     copy_dir_from_template(project, 'users')
+    call('python manage.py makemigrations'.split(' '))
     call('python manage.py migrate'.split(' '))
 
 
@@ -128,6 +129,13 @@ def build_frontend(project):
     call(['npm', 'run', 'eject'])  # TODO: Find a way to have this not require user input
 
     # Install node dependencies
+    FRONTEND_DEPENDENCIES = [
+        'normalize.css',
+    ]
+    for dep in FRONTEND_DEPENDENCIES:
+        call('npm install {0} --save'.format(dep).split(' '))
+
+    # Install node dev dependencies
     FRONTEND_DEV_DEPENDENCIES = [
         'style-loader',
         'css-loader',
