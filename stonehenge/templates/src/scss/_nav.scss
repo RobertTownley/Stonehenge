@@ -1,0 +1,31 @@
+nav {
+    background-color: $text-color;
+    position: sticky;
+    width: 100%;
+    .Nav__container {
+        display: flex;
+        justify-content: space-between;
+        a.Nav__brand {
+            align-items: center;
+            display: flex;
+            font-size: 28px;
+            padding-left: 20px;
+            text-decoration: none;
+        }
+        .Nav__right {
+            .Nav__item-wrapper {
+                align-items: center;
+                display: flex;
+                justify-content: space-between;
+                list-style: none;
+                .Nav__item {
+                    box-sizing: border-box;
+                    padding: 5px 20px;
+                    a {
+                        text-decoration: none;
+                        text-shadow: $text-shadow;
+                    }
+            }
+        }
+    }
+}

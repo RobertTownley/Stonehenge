@@ -1,3 +1,7 @@
+@import '_vars.scss';
+@import '_nav.scss';
+
+
 body {
-    color: green;
+    color: $text-color;
 }
