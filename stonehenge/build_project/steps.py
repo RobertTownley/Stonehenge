@@ -92,6 +92,7 @@ def build_backend(project):
     # Build the initial project
     call(['django-admin', 'startproject', project.slug, '.'])
     call('python manage.py startapp public'.split(' '))
+    call('python manage.py startapp users'.split(' '))
 
     # Configure settings
     os.remove(os.path.join(PROJECT_DIR, project.slug, 'settings.py'))
@@ -109,6 +110,7 @@ def build_backend(project):
     os.makedirs(os.path.join(PROJECT_DIR, 'templates'))
     destination = os.path.join(PROJECT_DIR, 'templates', 'index.html')
     copy_dir_from_template(project, 'public')
+    copy_dir_from_template(project, 'users')
     call('python manage.py migrate'.split(' '))
 
 
@@ -146,8 +148,9 @@ def build_frontend(project):
     call('npm install --save react-router-dom'.split(' '))
     call('mkdir -p src/components/'.split(' '))
     copy_from_template(project, 'src/App.js')
-    components_dir = os.path.join(TEMPLATES_DIR, 'src/components')
-    components = os.listdir(components_dir)
-    for filepath in components:
-        source = os.path.join('src/components', filepath)
-        copy_from_template(project, source)
+    copy_dir_from_template(project, 'src')
+    # components_dir = os.path.join(TEMPLATES_DIR, 'src/components')
+    # components = os.listdir(components_dir)
+    # for filepath in components:
+    #    source = os.path.join('src/components', filepath)
+    #    copy_from_template(project, source)
