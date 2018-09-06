@@ -1,2 +1,9 @@
+# Filesystem
+*.swp
+
+# Javascript
+webpack-stats.dev.json
+
+# Python
 *__pycache__*
 venv/
