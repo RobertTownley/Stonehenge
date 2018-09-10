@@ -56,7 +56,10 @@ def copy_dir_from_template(project, source_dir, dest=None):
 def copy_from_template(project, template_file, dest=None):
     '''Copies a file from a stonehenge template into the new project'''
     filepath = os.path.join(TEMPLATES_DIR, template_file)
-    if template_file.endswith('.swp'):
+    if any([
+        template_file.endswith('.swp'),
+        '__pycache__' in template_file,
+    ]):
         return None
 
     write_filepath = dest or os.path.join(PROJECT_DIR, template_file)
