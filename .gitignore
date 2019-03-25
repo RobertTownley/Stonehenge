@@ -1,14 +1,21 @@
 .DS_Store
-dist/electron/*
-dist/web/*
-build/*
-!build/icons
-coverage
-node_modules/
-npm-debug.log
-npm-debug.log.*
-thumbs.db
-!.gitkeep
+node_modules
+/dist
 
-# Development
-*.swp
+# local env files
+.env.local
+.env.*.local
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw*
