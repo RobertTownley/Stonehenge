@@ -20,6 +20,7 @@ export default new Vuex.Store({
     setServerToActive({ commit }, serverId) {
       commit('closeServerList')
       commit('setActiveServerId', serverId)
+      router.push('/editServer')
     },
     toggleServerList({commit}) {
       commit('toggleServerList')

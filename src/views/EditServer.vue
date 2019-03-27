@@ -1,6 +1,6 @@
 <template>
   <div id='editServer'>
-    <PageHeader>Configure Server</PageHeader>
+    <PageHeader>{{ server.name }} Settings</PageHeader>
   </div>
 </template>
 
@@ -11,6 +11,11 @@ export default {
   name: 'Configure Server',
   components: {
     PageHeader,
-  }
+  },
+  computed: {
+    server() {
+      return this.$store.getters.activeServer
+    }
+  },
 }
 </script>
