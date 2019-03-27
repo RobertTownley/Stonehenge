@@ -1,7 +1,7 @@
 <template>
   <div id='sidebar'>
-    <div v-if='activeServer' class='headerWrapper'>
-      <h2 class='header'>{{ activeServer.name }}</h2>
+    <div v-if='$store.getters.activeServer' class='headerWrapper'>
+      <h2 class='header'>{{ $store.getters.activeServer.name }}</h2>
       <ToggleServerMenuButton />
     </div>
     <div v-else class='headerWrapper'>
@@ -10,12 +10,11 @@
     </div>
 
     <div class='serverList' v-if='$store.state.serverListOpen'>
-      <div
-          v-for='server in $store.state.servers'
-          :class='(activeServer.id == server.id) ? "server active" : "server inactive"'
-          v-bind:key='server.id' >
-        {{ server.name }}
-      </div>
+      <ServerSidebarItem
+        v-for='server in $store.state.servers'
+        v-bind:key='server.id'
+        :server='server'
+      />
       <AddServerMenuButton
         text='Add New'
         class='addNew' />
@@ -34,12 +33,14 @@
 <script>
 import AddServerMenuButton from '@/components/buttons/AddServerMenu.vue'
 import Navigator from '@/components/Navigator.vue'
+import ServerSidebarItem from '@/components/ServerSidebarItem.vue'
 import ToggleServerMenuButton from '@/components/buttons/ToggleServerMenu.vue'
 
 export default {
   components: {
     AddServerMenuButton,
     Navigator,
+    ServerSidebarItem,
     ToggleServerMenuButton,
   },
   computed: {
@@ -110,14 +111,5 @@ export default {
   border-top: 1px white solid;
   color: white;
   padding: 16px;
-  .server {
-    cursor: pointer;
-    font-size: 20px;
-    padding: 8px 0px;
-    text-align: left;
-    &.active {
-      font-weight: bold;
-    }
-  }
 }
 </style>
