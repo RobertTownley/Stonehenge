@@ -10,12 +10,27 @@ export default new Vuex.Store({
     closeServerList({commit}) {
       commit('closeServerList')
     },
+    createNewServer(context, {db, data}) {
+      // Save server to database
+      db.insert(data, function(err, doc) {
+        context.dispatch('refreshServerListFromDB', db)
+        context.commit('setActiveServerId', doc._id)
+      })
+    },
     navigate(context, destination){
       context.dispatch('closeServerList')
       router.push(destination)
     },
     openServerList({commit}) {
       commit('openServerList')
+    },
+    initializeServerList({ commit }, servers) {
+      commit('saveServersToState', servers)
+    },
+    refreshServerListFromDB({ commit }, $db) {
+      $db.find({'type': 'server'}, function(err, servers) {
+        commit('saveServersToState', servers)
+      })
     },
     setServerToActive({ commit }, serverId) {
       commit('closeServerList')
@@ -28,16 +43,26 @@ export default new Vuex.Store({
   },
   getters: {
     activeServer: (state) => {
-      if(!state.servers.length) return null
-      return state.servers.find(server => server.id === state.activeServerId)
+      if(!state.servers.length) {
+        console.log("GETTER FAILED HERE")
+        return null
+      }
+      return state.servers.find(server => {
+        console.log("TRYING")
+        console.log(server)
+        return server.id === state.activeServerId
+      })
     },
   },
   mutations: {
     closeServerList(state) {
-      state.serverListOpen = false;
+      state.serverListOpen = false
     },
     openServerList(state) {
-      state.serverListOpen = true;
+      state.serverListOpen = true
+    },
+    saveServersToState(state, servers) {
+      state.servers = servers
     },
     setActiveServerId(state, serverId) {
       state.activeServerId = serverId
@@ -48,16 +73,7 @@ export default new Vuex.Store({
   },
   state: {
     activeServerId: 25,
-    servers: [
-      {
-        id: 25,
-        name: 'Personal Server',
-      },
-      {
-        id: 29,
-        name: 'Other Server',
-      },
-    ],
+    servers: [],
     serverListOpen: false,
   },
 })

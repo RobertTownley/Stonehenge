@@ -92,7 +92,9 @@ export default {
   display: flex;
   justify-content: space-between;
   height: 50px;
-  .header {
+  width: 100%;
+  h2.header {
+    box-sizing: border-box;
     color: white;
     text-transform: uppercase;
     text-align: left;

@@ -9,15 +9,13 @@
 
 <script>
 import Sidebar from './components/Sidebar.vue'
-import utils from './utils'
 
 export default {
   components: {
     Sidebar,
   },
   created() {
-    console.log("CREATED")
-    utils.getServerlist()
+    this.$store.dispatch('refreshServerListFromDB', this.$db)
   },
 }
 </script>

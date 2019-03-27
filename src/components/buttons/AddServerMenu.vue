@@ -1,5 +1,9 @@
 <template>
-  <button v-on:click='$store.dispatch("navigate", "/addServer")'>
+  <button
+    v-on:click='$store.dispatch("navigate", "/addServer")'
+    :class='text ? "withText" : "withoutText"'
+    
+  >
     <img src='@/assets/icons/addNewWhite.svg'/>
     <div>{{ text }}</div>
   </button>
@@ -16,15 +20,20 @@ export default {
 button {
   background-color: $darkblue;
   border: 0;
+  box-sizing: border-box;
   cursor: pointer;
   outline: 0;
   display: flex;
   justify-content: left;
   align-items: center;
+  padding: 0px 8px;
+  &.withoutText {
+    width: 50px;
+  }
 }
 img {
   height: 100%;
-  width: 48px;
+  width: 100%;
 }
 div {
   color: white;
