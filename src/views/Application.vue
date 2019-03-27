@@ -1,7 +1,6 @@
 <template>
   <div id='applications'>
-    <PageHeader title='Applications'/>
-    <img alt="Vue logo" src="../assets/logo.png">
+    <PageHeader>Applications</PageHeader>
   </div>
 </template>
 

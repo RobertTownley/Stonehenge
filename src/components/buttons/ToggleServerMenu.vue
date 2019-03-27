@@ -1,13 +1,17 @@
 <template>
   <button v-on:click='toggleMenu()'>
-    <img v-if='isOpen' src='@/assets/icons/closeWhite.svg'/>
+    <img v-if='$store.state.serverListOpen' src='@/assets/icons/closeWhite.svg'/>
     <img v-else src='@/assets/icons/hamburgerWhite.svg'/>
   </button>
 </template>
 
 <script>
 export default {
-  props: ['isOpen', 'toggleMenu']
+  methods: {
+    toggleMenu() {
+      this.$store.dispatch('toggleServerList');
+    },
+  }
 }
 </script>
 

@@ -1,17 +1,13 @@
 <template>
-  <button v-on:click='navigateToAddServerView()'>
+  <button v-on:click='$store.dispatch("navigate", "/addServer")'>
     <img src='@/assets/icons/addNewWhite.svg'/>
+    <div>{{ text }}</div>
   </button>
 </template>
 
 <script>
 export default {
-  props: ['isOpen'],
-  methods: {
-    navigateToAddServerView() {
-      this.$router.push('/addServer');
-    },
-  },
+  props: ['text'],
 }
 </script>
 
@@ -22,10 +18,19 @@ button {
   border: 0;
   cursor: pointer;
   outline: 0;
-  width: 60px;
+  display: flex;
+  justify-content: left;
+  align-items: center;
 }
 img {
   height: 100%;
-  width: 100%;
+  width: 48px;
+}
+div {
+  color: white;
+  font-size: 20px;
+  width: 100px;
+  padding-left: 8px;
+  flex: 1;
 }
 </style>

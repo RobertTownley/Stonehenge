@@ -1,63 +1,60 @@
 <template>
   <div id='sidebar'>
     <div v-if='activeServer' class='headerWrapper'>
-      <div class='header'>{{ activeServer.name }}</div>
-      <ToggleServerMenuButton :toggleMenu='toggleMenu'/>
+      <h2 class='header'>{{ activeServer.name }}</h2>
+      <ToggleServerMenuButton />
     </div>
     <div v-else class='headerWrapper'>
-      <div class='header'>No Servers Found</div>
+      <h2 class='header'>No Servers Found</h2>
       <AddServerMenuButton />
     </div>
 
-    <div class='serverList' v-if='serverListOpen && serverCount > 1'>
-      <div v-for='(server, index) in servers' v-bind:key='index' >
+    <div class='serverList' v-if='$store.state.serverListOpen'>
+      <div
+          v-for='server in $store.state.servers'
+          :class='(activeServer.id == server.id) ? "server active" : "server inactive"'
+          v-bind:key='server.id' >
         {{ server.name }}
       </div>
+      <AddServerMenuButton
+        text='Add New'
+        class='addNew' />
     </div>
 
     <div id="nav">
-      <router-link to="/applications">Applications</router-link>
-      <router-link to="/dashboard">Dashboard</router-link>
-      <router-link to="/monitoring">Monitoring</router-link>
-      <router-link to="/settings">Settings</router-link>
-      <router-link to="/Users">Users</router-link>
+      <Navigator to="/applications">Applications</Navigator>
+      <Navigator to="/">Dashboard</Navigator>
+      <Navigator to="/monitoring">Monitoring</Navigator>
+      <Navigator to="/settings">Settings</Navigator>
+      <Navigator to="/Users">Users</Navigator>
     </div>
   </div>
 </template>
 
 <script>
 import AddServerMenuButton from '@/components/buttons/AddServerMenu.vue'
+import Navigator from '@/components/Navigator.vue'
 import ToggleServerMenuButton from '@/components/buttons/ToggleServerMenu.vue'
 
 export default {
   components: {
     AddServerMenuButton,
+    Navigator,
     ToggleServerMenuButton,
   },
   computed: {
     activeServer() {
-      return this.servers.length ? this.servers[0] : null
+      if(!this.$store.state.servers.length) return null
+      return this.$store.state.servers.find(server => server.id == this.activeServerId)
     },
     serverCount() {
-      return this.servers.length
+      return this.$store.state.servers.length
     },
   },
   data() {
     return {
+      activeServerId: 25,
       serverListOpen: false,
-      servers: [],
-      otherThing: [
-        {name: 'Personal Server'},
-        {name: 'Other Server'},
-      ],
-    }
-  },
-  methods: {
-    navigate(page) {
-      this.$router.push(page);
-    },
-    toggleMenu() {
-      this.serverListOpen = !this.serverListOpen;
     }
   },
 }
@@ -100,6 +97,27 @@ export default {
     text-align: left;
     padding: 16px;
     font-size: 24px;
+  }
+}
+.addNew {
+  padding: 0;
+  text-align: left;
+  width: 100%;
+  margin-top: 16px;
+}
+.serverList {
+  background-color: $darkblue;
+  border-top: 1px white solid;
+  color: white;
+  padding: 16px;
+  .server {
+    cursor: pointer;
+    font-size: 20px;
+    padding: 8px 0px;
+    text-align: left;
+    &.active {
+      font-weight: bold;
+    }
   }
 }
 </style>

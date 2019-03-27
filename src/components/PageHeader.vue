@@ -1,5 +1,5 @@
 <template>
-  <h1 class='pageTitle'>{{ title }}</h1>
+  <h1 class='pageTitle'><slot></slot></h1>
 </template>
 
 <script>
