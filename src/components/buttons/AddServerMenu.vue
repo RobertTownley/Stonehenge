@@ -1,13 +1,17 @@
 <template>
-  <button v-on:click='toggleMenu()'>
-    <img v-if='isOpen' src='@/assets/icons/closeWhite.svg'/>
-    <img v-else src='@/assets/icons/hamburgerWhite.svg'/>
+  <button v-on:click='navigateToAddServerView()'>
+    <img src='@/assets/icons/addNewWhite.svg'/>
   </button>
 </template>
 
 <script>
 export default {
-  props: ['isOpen', 'toggleMenu']
+  props: ['isOpen'],
+  methods: {
+    navigateToAddServerView() {
+      this.$router.push('/addServer');
+    },
+  },
 }
 </script>
 
@@ -22,5 +26,6 @@ button {
 }
 img {
   height: 100%;
+  width: 100%;
 }
 </style>

@@ -6,8 +6,15 @@
     </div>
     <div v-else class='headerWrapper'>
       <div class='header'>No Servers Found</div>
-      <ToggleServerMenuButton />
+      <AddServerMenuButton />
     </div>
+
+    <div class='serverList' v-if='serverListOpen && serverCount > 1'>
+      <div v-for='(server, index) in servers' v-bind:key='index' >
+        {{ server.name }}
+      </div>
+    </div>
+
     <div id="nav">
       <router-link to="/applications">Applications</router-link>
       <router-link to="/dashboard">Dashboard</router-link>
@@ -19,10 +26,12 @@
 </template>
 
 <script>
+import AddServerMenuButton from '@/components/buttons/AddServerMenu.vue'
 import ToggleServerMenuButton from '@/components/buttons/ToggleServerMenu.vue'
 
 export default {
   components: {
+    AddServerMenuButton,
     ToggleServerMenuButton,
   },
   computed: {
@@ -35,14 +44,20 @@ export default {
   },
   data() {
     return {
-      servers: [{
-        name: 'Personal Server',
-      }],
+      serverListOpen: false,
+      servers: [],
+      otherThing: [
+        {name: 'Personal Server'},
+        {name: 'Other Server'},
+      ],
     }
   },
   methods: {
+    navigate(page) {
+      this.$router.push(page);
+    },
     toggleMenu() {
-      console.log("TOGGLING");
+      this.serverListOpen = !this.serverListOpen;
     }
   },
 }
