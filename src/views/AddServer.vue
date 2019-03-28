@@ -32,7 +32,7 @@ export default {
         name: this.serverName,
         type: 'server',
       }
-      this.$store.dispatch('createNewServer', {db: this.$db, data: serverData})
+      this.$store.dispatch('createNewServer', {data: serverData})
     },
   },
 }

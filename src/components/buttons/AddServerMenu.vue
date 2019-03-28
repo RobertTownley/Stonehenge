@@ -32,8 +32,8 @@ button {
   }
 }
 img {
-  height: 100%;
-  width: 100%;
+  height: 50px;
+  width: 50px;
 }
 div {
   color: white;

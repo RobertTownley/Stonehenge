@@ -15,7 +15,7 @@ export default {
     Sidebar,
   },
   created() {
-    this.$store.dispatch('refreshServerListFromDB', this.$db)
+    this.$store.dispatch('refreshServerListFromDB')
   },
 }
 </script>
