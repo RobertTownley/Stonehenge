@@ -7,6 +7,7 @@ import MonitoringView from './views/Monitoring.vue'
 import SettingsView from './views/Settings.vue'
 import UsersView from './views/Users.vue'
 import AddServerView from './views/AddServer.vue'
+import ClientKeysView from './views/ClientKeys.vue'
 
 Vue.use(Router)
 
@@ -23,6 +24,11 @@ export default new Router({
       path: '/applications',
       name: 'Applications',
       component: ApplicationView,
+    },
+    {
+      path: '/clientkeys',
+      name: 'Client Keys',
+      component: ClientKeysView,
     },
     {
       path: '/monitoring',

@@ -29,7 +29,6 @@ export default {
   font-family: 'Source', 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   justify-content: space-between;
 }
 #container {
@@ -39,5 +38,22 @@ export default {
   margin-left: 320px;
   width: 100vw;
   height: 100vh;
+}
+p {
+  line-height: 1.4;
+  font-size: 16px;
+  max-width: 800px;
+}
+h1, h2, h3 {
+  margin-bottom: 16px;
+}
+h1 {
+  font-size: 36px;
+}
+h2 {
+  font-size: 32px;
+}
+h3 {
+  font-size: 28px;
 }
 </style>

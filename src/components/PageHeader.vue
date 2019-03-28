@@ -10,9 +10,7 @@ export default{
 
 <style lang='scss' scoped>
 .pageTitle {
-  font-size: 24px;
-  padding: 16px;
-  font-weight: 900;
+  padding: 16px 16px 16px 0px;
 }
 
 
