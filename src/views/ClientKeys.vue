@@ -18,8 +18,8 @@
       </div>
     </div>
     <div class='keyButtonContainer'>
-      <RefreshSSHKeysButton />
       <NewSSHKeyButton />
+      <RefreshSSHKeysButton />
     </div>
   </div>
 </template>
