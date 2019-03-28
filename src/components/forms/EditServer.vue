@@ -5,13 +5,26 @@
       <input v-model='server.name' type='text' />
     </div>
     <div class='field'>
-      <button v-on:click='saveChanges'>Save Changes</button>
+      <label>IP Address: </label>
+      <input v-model='server.ip_address' type='text' />
+    </div>
+    <div class='field'>
+      <label>Hosting Provider: </label>
+      <input v-model='server.hosting_provider' type='text' />
+    </div>
+    <div class='field'>
+      <SaveButton :clickEvent='saveChanges'>Save Changes</SaveButton>
     </div>
   </div>
 </template>
 
 <script>
+import SaveButton from '@/components/buttons/SaveButton.vue';
+
 export default {
+  components: {
+    SaveButton,
+  },
   computed: {
     server() {
       return this.$store.getters.activeServer
@@ -26,5 +39,23 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+.editServerForm {
+  width: 600px;
+  .field {
+    box-sizing: border-box;
+    align-items: center;
+    display: flex;
+    padding: 8px 0px;
 
+    width: 100%;
+    justify-content: space-between;
+  }
+  label {
+    width: 200px;
+  }
+  input {
+    flex-grow: 1;
+    padding: 8px;
+  }
+}
 </style>

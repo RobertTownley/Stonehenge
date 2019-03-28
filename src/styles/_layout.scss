@@ -1,0 +1,14 @@
+@import '@/styles/_colors.scss';
+
+.styledButton {
+  background-color: white;
+  border: 1px $darkblue solid;
+  color: $darkblue;
+  cursor: pointer;
+  font-size: 20px;
+  padding: 8px;
+  &:hover {
+    background-color: $darkblue;
+    color: white;
+  }
+}

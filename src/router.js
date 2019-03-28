@@ -7,7 +7,6 @@ import MonitoringView from './views/Monitoring.vue'
 import SettingsView from './views/Settings.vue'
 import UsersView from './views/Users.vue'
 import AddServerView from './views/AddServer.vue'
-import EditServerView from './views/EditServer.vue'
 
 Vue.use(Router)
 
@@ -44,11 +43,6 @@ export default new Router({
       path: '/addserver',
       name: 'Add Server',
       component: AddServerView,
-    },
-    {
-      path: '/editserver',
-      name: 'Edit Server',
-      component: EditServerView,
     },
   ]
 })

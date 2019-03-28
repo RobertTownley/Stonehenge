@@ -1,6 +1,6 @@
 <template>
   <div id='settings'>
-    <PageHeader>Settings</PageHeader>
+    <PageHeader class='settingsHeader'>Settings</PageHeader>
     <EditServerForm v-if='$store.getters.activeServer' />
   </div>
 </template>
@@ -17,3 +17,15 @@ export default {
   }
 }
 </script>
+
+<style lang='scss' scoped>
+@import '@/styles/_colors.scss';
+#settings {
+  color: $darkblue;
+  font-size: 20px;
+  text-align: left;
+}
+.settingsHeader {
+  padding-left: 0;
+}
+</style>
