@@ -1,7 +1,7 @@
 <template>
   <div
     :class='isActive ? "server active" : "server inactive"'
-    v-on:click='$store.dispatch("setServerToActive", server.id)'
+    v-on:click='$store.dispatch("setServerToActive", server._id)'
   >
     {{ server.name }}
   </div>

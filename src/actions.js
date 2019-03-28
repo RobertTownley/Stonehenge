@@ -9,7 +9,7 @@ const actions = {
       context.commit('setActiveServerId', doc._id)
     })
   },
-  updateActiveServer({ commit, state }, data) {
+  updateActiveServer({ commit, dispatch, state }, data) {
     db.update(
       {_id: state.activeServerId},
       {$set: data},
@@ -19,6 +19,7 @@ const actions = {
           .sort({order: 1})
           .exec(function(err, servers){
             commit('saveServersToState', servers)
+            dispatch('navigate', '/')
           })
       })
   },
@@ -48,8 +49,10 @@ const actions = {
   initializeServerList({ commit }, servers) {
     commit('saveServersToState', servers)
   },
-  setServerToActive({ commit }, serverId){
-    commit('setActiveServerId', serverId)
+  setServerToActive({ commit, dispatch }, _id){
+    commit('setActiveServerId', _id)
+    commit('closeServerList')
+    dispatch('navigate', '/')
   },
   toggleServerList({ commit }) {
     commit('toggleServerList')

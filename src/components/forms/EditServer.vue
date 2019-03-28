@@ -2,7 +2,7 @@
   <div class='editServerForm'>
     <div class='field'>
       <label>Server Name: </label>
-      <input v-model='formData.name' type='text' />
+      <input v-model='server.name' type='text' />
     </div>
     <div class='field'>
       <button v-on:click='saveChanges'>Save Changes</button>
@@ -17,17 +17,9 @@ export default {
       return this.$store.getters.activeServer
     }
   },
-  data() {
-    return {
-      formData: {},
-    }
-  },
-  created() {
-    this.formData = this.server
-  },
   methods: {
     saveChanges() {
-      this.$store.dispatch('updateActiveServer', this.formData)
+      this.$store.dispatch('updateActiveServer', this.server)
     }
   },
 }
