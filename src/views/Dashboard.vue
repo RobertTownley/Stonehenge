@@ -5,7 +5,6 @@
 </template>
 
 <script>
-import db from '@/datastore'
 import PageHeader from '@/components/PageHeader.vue';
 
 export default {
@@ -17,11 +16,6 @@ export default {
     return {
       test: 'Nothing yet',
     }
-  },
-  created() {
-    db.find({}, function(err, docs) {
-      // Do something with docs?
-    })
   },
 }
 </script>

@@ -20,19 +20,14 @@ export default {
   components: {
     PageHeader,
   },
-  data() {
-    return {
-      serverName: 'Placeholder',
-    }
-  },
   methods: {
     submitServerForm() {
-      const serverData = {
+      const data = {
         dateCreated: Date.now(),
         name: this.serverName,
         type: 'server',
       }
-      this.$store.dispatch('createNewServer', {data: serverData})
+      this.$store.dispatch('createServer', data)
     },
   },
 }
