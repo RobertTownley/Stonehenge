@@ -2,8 +2,11 @@
   <div id='clientKeys'>
     <PageHeader>Client Keys</PageHeader>
     <div class='wrapper'>
-      <div class='keyList' v-if='keys.length'>
-        <SSHKeyTile :key='key' v-for='key in keys'/>
+      <div class='keyList' v-if='$store.state.clientKeys'>
+        <SSHKeyTile
+          :clientKey='clientKey'
+          v-bind:key='index'
+          v-for='(clientKey, index) in $store.state.clientKeys'/>
       </div>
       <div v-else class='warning'>
         <h3>No client keys found</h3>
@@ -38,11 +41,6 @@ export default {
     RefreshSSHKeysButton,
     SSHKeyTile,
   },
-  data() {
-    return {
-      keys: [],
-    }
-  }
 }
 </script>
 

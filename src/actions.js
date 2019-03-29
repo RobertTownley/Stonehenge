@@ -23,6 +23,18 @@ const actions = {
           })
       })
   },
+  refreshClientKeysFromDB(context) {
+    db
+      .find({type: 'clientkey'})
+      .sort({order: 1})
+      .exec(function(err, keys){
+        context.commit('saveClientKeysToState', keys)
+      })
+  },
+  initializeStateFromDB({ dispatch }) {
+    dispatch('refreshServerListFromDB')
+    dispatch('refreshClientKeysFromDB')
+  },
   refreshServerListFromDB({ commit }) {
     db
       .find({type: 'server'})

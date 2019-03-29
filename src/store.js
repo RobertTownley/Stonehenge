@@ -19,6 +19,9 @@ export default new Vuex.Store({
     closeServerList(state) {
       state.serverListOpen = false
     },
+    saveClientKeysToState(state, keys) {
+      state.clientKeys = keys
+    },
     saveServersToState(state, servers) {
       state.servers = servers
     },
@@ -31,6 +34,7 @@ export default new Vuex.Store({
   },
   state: {
     activeServerId: null,
+    clientKeys: [],
     servers: [],
     serverListOpen: false,
   },

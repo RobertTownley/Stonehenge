@@ -3,6 +3,10 @@
 </template>
 
 <script>
+import {
+  getPublicKeyFiles,
+  savePublicKeysToDB
+} from '@/utils/keys';
 export default {
   data() {
     return {
@@ -11,7 +15,11 @@ export default {
   },
   methods: {
     refreshClientKeys() {
-      alert("Refreshing");
+      getPublicKeyFiles()
+        .then((keys) => { return savePublicKeysToDB(keys)})
+        .then(() => {
+          this.$store.dispatch('refreshClientKeysFromDB')
+        })
     }
   }
 }
