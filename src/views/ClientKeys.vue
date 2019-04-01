@@ -13,7 +13,7 @@
         <p>Stonehenge has no record of any client keys on this computer. You can check for existing keys by clicking the
         "Refresh" button, or create a new one by clicking "Generate New Key"</p>
       </div>
-      <div class='info'>
+      <div class='infoSidebar'>
         <p>Client keys (also called "SSH keys") are files that allow you to authenticate with servers. Think of them as long passwords that you keep in a file.</p>
         <p>On this page, you can keep track of all of the client keys on your computer. You can generate new client keys, or remove existing ones.</p>
         <p>Keep in mind that removing existing keys locks you out of the server, so only
@@ -50,13 +50,6 @@ export default {
   .wrapper {
     display: flex;
     justify-content: space-between;
-  }
-  .info {
-    padding: 0px 16px;
-    width: 300px;
-    p {
-      margin-bottom: 16px;
-    }
   }
   .keyButtonContainer {
     button {

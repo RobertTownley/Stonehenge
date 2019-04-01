@@ -24,6 +24,8 @@ export default {
 @import '@/styles/_colors.scss';
 @import '@/styles/_reset.scss';
 @import '@/styles/_fonts.scss';
+@import '@/styles/_layout.scss';
+
 #app {
   display: flex;
   font-family: 'Source', 'Avenir', Helvetica, Arial, sans-serif;
