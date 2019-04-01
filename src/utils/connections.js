@@ -7,8 +7,6 @@ export async function getConnectionStatus(server) {
     let remoteCmd = `ssh ${server.username}@${server.ip_address} ${command}`
     exec(remoteCmd, (err, stdout, stderr) => {
       if(stderr || err) {
-        console.log(err)
-        console.log(stderr)
         resolve("Connection Failed")
       }
       resolve("Connected")

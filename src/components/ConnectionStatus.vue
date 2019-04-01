@@ -21,7 +21,7 @@ export default {
       const conn = this.$store.state.connectionStatus
       if(conn === 'Connected') {
         return 'connected'
-      } else if(conn === 'Disconnected') {
+      } else if(conn === 'Connection Failed') {
         return 'disconnected'
       } else {
         return 'pending'
