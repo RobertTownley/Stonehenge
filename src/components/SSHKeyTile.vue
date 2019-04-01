@@ -32,7 +32,7 @@
 export default {
   data() {
     return {
-      showDeleteConfirmation: true,
+      showDeleteConfirmation: false,
     }
   },
   methods: {

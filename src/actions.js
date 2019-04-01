@@ -1,6 +1,8 @@
 import db from './datastore'
 import router from './router'
 
+import { getConnectionStatus } from '@/utils/connections'
+
 const actions = {
   // Database Operations
   createServer(context, data) {
@@ -68,6 +70,17 @@ const actions = {
   },
   toggleServerList({ commit }) {
     commit('toggleServerList')
+  },
+
+  // Server Interactions
+  pingActiveServer({ commit, getters }) {
+    if(!getters.activeServer) return null
+    getConnectionStatus(getters.activeServer)
+      .then(connectionStatus => commit("setConnectionStatus", connectionStatus))
+      .catch(err => console.log(err))
+  },
+  resetConnectionStatus({ commit }) {
+    commit('setConnectionStatus', 'Checking...')
   },
 }
 export default actions

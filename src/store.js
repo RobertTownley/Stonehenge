@@ -28,12 +28,17 @@ export default new Vuex.Store({
     setActiveServerId(state, serverId) {
       state.activeServerId = serverId
     },
+    setConnectionStatus(state, connectionStatus){
+      state.connectionStatus = connectionStatus
+    },
     toggleServerList(state) {
       state.serverListOpen = !state.serverListOpen
     },
   },
   state: {
     activeServerId: null,
+    connectionRefreshInterval: 30000,
+    connectionStatus: 'Checking...',
     clientKeys: [],
     servers: [],
     serverListOpen: false,

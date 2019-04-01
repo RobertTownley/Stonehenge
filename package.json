@@ -13,6 +13,8 @@
     "electron": "^4.1.1",
     "nedb": "^1.8.0",
     "register-service-worker": "^1.6.2",
+    "remote-exec": "0.0.3",
+    "ssh2": "^0.8.2",
     "vue": "^2.6.6",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1"

@@ -9,6 +9,10 @@
       <input v-model='server.ip_address' type='text' />
     </div>
     <div class='field'>
+      <label>Username: </label>
+      <input v-model='server.username' type='text' />
+    </div>
+    <div class='field'>
       <label>Hosting Provider: </label>
       <input v-model='server.hosting_provider' type='text' />
     </div>
