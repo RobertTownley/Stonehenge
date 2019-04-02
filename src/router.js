@@ -3,6 +3,7 @@ import Router from 'vue-router'
 
 import DashboardView from './views/Dashboard.vue'
 import ApplicationView from './views/Application.vue'
+import FileBrowser from './views/FileBrowser'
 import MonitoringView from './views/Monitoring.vue'
 import SettingsView from './views/Settings.vue'
 import UsersView from './views/Users.vue'
@@ -29,6 +30,11 @@ export default new Router({
       path: '/clientkeys',
       name: 'Client Keys',
       component: ClientKeysView,
+    },
+    {
+      path: '/filebrowser',
+      name: 'File Browser',
+      component: FileBrowser,
     },
     {
       path: '/monitoring',

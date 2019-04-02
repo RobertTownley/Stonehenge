@@ -24,6 +24,7 @@
       <Navigator to="/applications">Applications</Navigator>
       <Navigator to="/clientkeys">Client Keys</Navigator>
       <Navigator to="/">Dashboard</Navigator>
+      <Navigator to="/filebrowser">File Browser</Navigator>
       <Navigator to="/monitoring">Monitoring</Navigator>
       <Navigator to="/settings">Settings</Navigator>
       <Navigator to="/Users">Users</Navigator>

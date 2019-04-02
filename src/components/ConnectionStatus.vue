@@ -36,6 +36,7 @@ export default {
       this.$store.dispatch('resetConnectionStatus')
       this.$store.dispatch('pingActiveServer')
       this.connectionInterval = setInterval(() => {
+        this.$store.dispatch('resetConnectionStatus')
         this.$store.dispatch('pingActiveServer')
       }, this.$store.state.connectionRefreshInterval)
     },
